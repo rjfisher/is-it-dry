@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>is it dry</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+
+</head>
+
+<body>
+  <!--[if lt IE 10]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+  <div id="search-bar">
+    <input class="search-query" type="text" placeholder="DESTINATION">
+    <input class="search-submit" type="button" value="LET'S ROCK" disabled>
+  </div>
+
+
+  <div id="condition-selector">
+    <input type="radio" id="climb" name="activity" checked="true" />
+    <label class="activity-selector left-end" for="climb">climbing</label>
+
+    <input type="radio" id="ski" name="activity" />
+    <label class="activity-selector" for="ski">skiing</label>
+
+    <input type="radio" id="hike" name="activity" />
+    <label class="activity-selector" for="hike">hiking/backpacking</label>
+
+    <input type="radio" id="other" name="activity" />
+    <label class="activity-selector right-end" for="other">other</label>
+  </div>
+
+  <div id="custom-conditions">
+    <div class="collapse">[-] collapse</div>
+
+    <div>
+      <input type="checkbox" id="smap" />
+      <label class="custom-label" for="smap">Soil Moisture - SMAP</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="cloud-cover" />
+      <label class="custom-label" for="cloud-cover">Cloud Cover</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="snow-pack" />
+      <label class="custom-label" for="snow-pack">Snow Measurements</label>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <!-- build:js scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKPZL5iWCktgHxlYG8r_TBEKV87qKNXcA&libraries=places"></script>
+  <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:js scripts/main.js -->
+  <script src="scripts/main.js"></script>
+  <!-- endbuild -->
+</body>
+
+</html>
