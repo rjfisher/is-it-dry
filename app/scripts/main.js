@@ -13,11 +13,18 @@ var mapModule = (function() {
   function getTileUrl(tile, zoom) {
     var layer = (activity == 'ski') ? skiConditions : climbConditions;
 
-    return "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/" +
-              layer + "/default/" + currentDateISO +
-              "/GoogleMapsCompatible_Level6/" +
-              zoom + "/" + tile.y + "/" +
-              tile.x + ".png";
+    /*return 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/' +
+              layer + '/default/' + currentDateISO +
+              '/GoogleMapsCompatible_Level6/' +
+              zoom + '/' + tile.y + '/' +
+              tile.x + '.png';*/
+
+    return 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/' +
+            layer + '/default/' + currentDateISO +
+            '/GoogleMapsCompatible_Level6/' +
+            zoom + '/' + tile.y + '/' +
+            tile.x + '.png';
+
   }
 
   function layerOptions() {
@@ -32,6 +39,55 @@ var mapModule = (function() {
     };
   }
 
+  function activitySelected(event) {
+    activity = event.target.getAttribute('for');
+
+    if (activity === 'other') {
+      $('#custom-conditions').slideDown();
+    } else {
+      $('#custom-conditions').slideUp();
+    }
+
+    var imageMapType = new google.maps.ImageMapType(layerOptions());
+    map.overlayMapTypes.clear();
+    map.overlayMapTypes.push(imageMapType);
+  }
+
+  function onPlaceChanged() {
+    var place = autocomplete.getPlace();
+    if (place.geometry) {
+      map.panTo(place.geometry.location);
+      map.setZoom(15);
+      lat = place.geometry.location.lat();
+      lng = place.geometry.location.lng();
+    } else {
+      document.getElementsByClassName('search-query')[0].placeholder = 'DESTINATION';
+    }
+  }
+
+  function bindEvents() {
+    $('.search-query').keyup(function(event) {
+      if(event.target.value) {
+        $('.search-submit').attr('disabled', false);
+        return;
+      }
+
+      $('.search-submit').attr('disabled', true);
+    });
+
+    $('.search-submit').on('click', function(event) {
+      onPlaceChanged();
+    });
+
+    $('.activity-selector').on('click', function(event) {
+      activitySelected(event);
+    });
+
+    $('#custom-conditions .collapse').on('click', function(event) {
+      $('#custom-conditions').slideUp();
+    });
+  }
+
   function init() {
     countries = {
       'us': {
@@ -43,7 +99,7 @@ var mapModule = (function() {
       }
     };
 
-    currentDateISO = new Date().toISOString().split("T")[0];
+    currentDateISO = new Date().toISOString().split('T')[0];
     activity = 'climb';
     climbConditions = 'AMSR2_Soil_Moisture_SCA_Day';
     skiConditions = 'AMSR2_Snow_Water_Equivalent';
@@ -75,10 +131,41 @@ var mapModule = (function() {
     // Create overlay map
     imageMap = new google.maps.ImageMapType(layerOptions());
     map.overlayMapTypes.push(imageMap);
+
+    bindEvents();
   }
+  return {
+    init: init,
+    activitySelected: activitySelected,
+    onPlaceChanged: onPlaceChanged
+  };
+})();
+
+mapModule.init();
+
+var indexModule = (function() {
+  function init() {
+    $('.search-query').keyup(function(event) {
+      if(event.target.value) {
+        $('.search-submit').attr('disabled', false);
+        return;
+      }
+
+      $('.search-submit').attr('disabled', true);
+    });
+
+    $('.search-submit').on('click', function(event) {
+      mapModule.onPlaceChanged();
+    });
+
+    $('.activity-selector').on('click', function(event) {
+      mapModule.activitySelected(event);
+    });
+  }
+
   return {
     init: init,
   };
 })();
 
-mapModule.init();
+indexModule.init();
