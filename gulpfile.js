@@ -79,6 +79,11 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
+gulp.task('deploy', ['default'], () => {
+  return gulp.src('dist/**/*')
+    .pipe($.ghPages());
+});
+
 gulp.task('serve', () => {
   runSequence(['clean', 'wiredep'], ['styles', 'scripts', 'fonts'], () => {
     browserSync.init({
